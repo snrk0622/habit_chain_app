@@ -42,12 +42,24 @@ class MyApp extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return MaterialApp(
-      title: 'Habit Chain',
-      theme: _lightTheme,
-      darkTheme: _darkTheme,
-      themeMode: ref.watch(themeProvider),
-      home: const LayoutWithBottomNavigationBar(),
+    final themeModeAsyncValue = ref.watch(themeProvider);
+
+    return themeModeAsyncValue.when(
+      data: (themeMode) => MaterialApp(
+        title: 'Habit Chain',
+        theme: _lightTheme,
+        darkTheme: _darkTheme,
+        themeMode: themeMode,
+        home: const LayoutWithBottomNavigationBar(),
+      ),
+      loading: () => const CircularProgressIndicator(),
+      error: (error, stack) => MaterialApp(
+        title: 'Habit Chain',
+        theme: _lightTheme,
+        darkTheme: _darkTheme,
+        themeMode: ThemeMode.system,
+        home: const LayoutWithBottomNavigationBar(),
+      ),
     );
   }
 }

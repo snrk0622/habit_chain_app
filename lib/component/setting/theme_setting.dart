@@ -9,23 +9,29 @@ class ThemeSetting extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return SettingItemContainer(
-      title: '外観モード',
-      icon: Icons.contrast,
-      child: Column(
-        children: ThemeMode.values.map((themeMode) {
-          return RadioListTile<ThemeMode>(
-            title: Text(themeMode.toString().split('.').last),
-            value: themeMode,
-            groupValue: ref.watch(themeProvider),
-            onChanged: (ThemeMode? newTheme) {
-              if (newTheme != null) {
-                ref.read(themeProvider.notifier).state = newTheme;
-              }
-            },
-          );
-        }).toList(),
+    final themeModeAsyncValue = ref.watch(themeProvider);
+
+    return themeModeAsyncValue.when(
+      data: (currentTheme) => SettingItemContainer(
+        title: '外観モード',
+        icon: Icons.contrast,
+        child: Column(
+          children: ThemeMode.values.map((themeMode) {
+            return RadioListTile<ThemeMode>(
+              title: Text(themeMode.toString().split('.').last),
+              value: themeMode,
+              groupValue: currentTheme,
+              onChanged: (ThemeMode? newTheme) {
+                if (newTheme != null) {
+                  ref.read(themeProvider.notifier).setThemeMode(newTheme);
+                }
+              },
+            );
+          }).toList(),
+        ),
       ),
+      loading: () => const CircularProgressIndicator(),
+      error: (error, stack) => Text('Error: $error'),
     );
   }
 }
