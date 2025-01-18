@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'view/home_view.dart';
-import 'view/setting_view.dart';
-import 'constant/app_constant.dart';
+import 'component/layout/layout_with_bottom_navigation_bar.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -10,59 +8,13 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Habit Chain',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        primaryColor: Colors.green,
         useMaterial3: true,
       ),
-      home: const _BottomNavigationBar(),
+      home: const LayoutWithBottomNavigationBar(),
     );
   }
 }
 
-class _BottomNavigationBar extends StatefulWidget {
-  const _BottomNavigationBar({super.key});
-
-  @override
-  State<_BottomNavigationBar> createState() => _BottomNavigationBarState();
-}
-
-class _BottomNavigationBarState extends State<_BottomNavigationBar> {
-  static const List<Widget> _pages = <Widget>[
-    HomePage(),
-    SettingPage(),
-  ];
-
-  int _selectedIndex = 0;
-
-  void _onTapItem(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(AppConstant.title),
-      ),
-      body: _pages[_selectedIndex],
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _selectedIndex,
-        onTap: _onTapItem,
-        items: const <BottomNavigationBarItem> [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.dashboard),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.tune),
-            label: 'Setting',
-          ),
-        ],
-        type: BottomNavigationBarType.fixed,
-      ),
-    );
-  }
-}
