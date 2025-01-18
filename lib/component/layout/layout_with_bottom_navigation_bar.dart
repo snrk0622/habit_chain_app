@@ -46,9 +46,11 @@ class LayoutWithBottomNavigationBarState extends State<LayoutWithBottomNavigatio
           ),
         ],
         type: BottomNavigationBarType.fixed,
-        selectedItemColor: Theme.of(context).primaryColor,
-        showUnselectedLabels: false,
+        enableFeedback: true,
+        selectedItemColor: Theme.of(context).colorScheme.primary,
         selectedLabelStyle: const TextStyle(fontSize: 10),
+        unselectedItemColor: Theme.of(context).colorScheme.onSurface,
+        showUnselectedLabels: false,
       ),
     );
   }

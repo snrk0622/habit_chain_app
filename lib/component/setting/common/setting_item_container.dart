@@ -26,6 +26,7 @@ class SettingItemContainer extends StatelessWidget {
               Icon(
                 icon,
                 size: 20,
+                color: Theme.of(context).colorScheme.onSurface,
               ),
               const SizedBox(
                 width: 8,
