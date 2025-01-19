@@ -1,67 +1,64 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'view/home_view.dart';
-import 'view/setting_view.dart';
-import 'constant/app_constant.dart';
+import 'provider/theme_provider.dart';
+import 'constant/color_constant.dart';
+import 'component/layout/layout_with_bottom_navigation_bar.dart';
 
-class MyApp extends StatelessWidget {
+final ThemeData _lightTheme = ThemeData(
+  brightness: Brightness.light,
+  colorScheme: const ColorScheme(
+    brightness: Brightness.light,
+    primary: ColorConstant.primaryColor,
+    onPrimary: ColorConstant.surfaceColorForLight,
+    secondary: ColorConstant.secondaryColor,
+    onSecondary: ColorConstant.surfaceColorForLight,
+    error: ColorConstant.errorColor,
+    onError: ColorConstant.surfaceColorForLight,
+    surface: ColorConstant.surfaceColorForLight,
+    onSurface: ColorConstant.onSurfaceColorForLight,
+  ),
+  useMaterial3: true,
+);
+
+final ThemeData _darkTheme = ThemeData(
+  brightness: Brightness.dark,
+  colorScheme: const ColorScheme(
+    brightness: Brightness.dark,
+    primary: ColorConstant.primaryColor,
+    onPrimary: ColorConstant.surfaceColorForLight,
+    secondary: ColorConstant.secondaryColor,
+    onSecondary: ColorConstant.surfaceColorForLight,
+    error: ColorConstant.errorColor,
+    onError: ColorConstant.surfaceColorForLight,
+    surface: ColorConstant.surfaceColorForDark,
+    onSurface: ColorConstant.surfaceColorForLight,
+  ),
+  useMaterial3: true,
+);
+
+class MyApp extends ConsumerWidget {
   const MyApp({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
+  Widget build(BuildContext context, WidgetRef ref) {
+    final themeModeAsyncValue = ref.watch(themeProvider);
+
+    return themeModeAsyncValue.when(
+      data: (themeMode) => MaterialApp(
+        title: 'Habit Chain',
+        theme: _lightTheme,
+        darkTheme: _darkTheme,
+        themeMode: themeMode,
+        home: const LayoutWithBottomNavigationBar(),
       ),
-      home: const _BottomNavigationBar(),
-    );
-  }
-}
-
-class _BottomNavigationBar extends StatefulWidget {
-  const _BottomNavigationBar({super.key});
-
-  @override
-  State<_BottomNavigationBar> createState() => _BottomNavigationBarState();
-}
-
-class _BottomNavigationBarState extends State<_BottomNavigationBar> {
-  static const List<Widget> _pages = <Widget>[
-    HomePage(),
-    SettingPage(),
-  ];
-
-  int _selectedIndex = 0;
-
-  void _onTapItem(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(AppConstant.title),
-      ),
-      body: _pages[_selectedIndex],
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _selectedIndex,
-        onTap: _onTapItem,
-        items: const <BottomNavigationBarItem> [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.dashboard),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.tune),
-            label: 'Setting',
-          ),
-        ],
-        type: BottomNavigationBarType.fixed,
+      loading: () => const CircularProgressIndicator(),
+      error: (error, stack) => MaterialApp(
+        title: 'Habit Chain',
+        theme: _lightTheme,
+        darkTheme: _darkTheme,
+        themeMode: ThemeMode.system,
+        home: const LayoutWithBottomNavigationBar(),
       ),
     );
   }
