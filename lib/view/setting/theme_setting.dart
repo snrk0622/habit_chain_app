@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../provider/theme_provider.dart';
-import './common/setting_item_container.dart';
+import '../../component/layout/setting_item_container.dart';
 
 class ThemeSetting extends ConsumerWidget {
   const ThemeSetting({super.key});
